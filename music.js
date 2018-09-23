@@ -49,9 +49,25 @@ function joinChannel(msg, voiceName){
   }
 }
 
+function parseURL(videoURL){
+
+  console.log(videoURL);
+
+  let pos = videoURL.indexOf("=") + 1;
+  if(pos == 0){
+    pos = videoURL.lastIndexOf("/") + 1
+  }
+
+  let id = videoURL.slice(pos, pos+11);
+
+  return id;
+}
+
 function addToQueue(videoURL){
 
-  var videoID = videoURL;
+  var videoID = parseURL(videoURL);
+
+  // videoID = "iu7wJwbLkpo";
   console.log(`Adding ${videoID} to the queue...`);
   ytdl.getInfo("https://www.youtube.com/watch?v=" + videoID, (error, info) => {
 		  if(error) {
@@ -82,10 +98,10 @@ var commands = {
   },
 
   dmResponse: function(msg){
-    if(msg.content.length == 11){
+    // if(msg.content.length == 11){
       addToQueue(msg.content);
       msg.channel.send("*Song added to queue.*");
-    }
+    // }
   },
 
   playMusic: function(msg, args){
