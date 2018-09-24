@@ -1,0 +1,5 @@
+# Auth Token #
+auth.json
+
+# node.js packages #
+node_modules
