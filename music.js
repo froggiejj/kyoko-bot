@@ -29,7 +29,7 @@ function playNextSong(){
   console.log("Began playing: " + title);
 
   voiceConnection.once("end", reason => {
-		voiceConnection = null;
+	    voiceConnection = null;
 		client.user.setActivity();
 		if(!stopped && !isQueueEmpty()) {
 			playNextSong();
@@ -39,44 +39,44 @@ function playNextSong(){
 }
 
 function joinChannel(msg, voiceName){
-  var voiceChannel = server.channels.find(chn => chn.name === voiceName && chn.type === "voice");
-  if(voiceChannel == null){msg.reply("Couldn't find that channel"); }
-  else{
-    voiceChannel.join().then(connection => {dispatcher = connection;}).catch(console.error);
+    var voiceChannel = server.channels.find(chn => chn.name === voiceName && chn.type === "voice");
+    if(voiceChannel == null){msg.reply("Couldn't find that channel"); }
+    else{
+        voiceChannel.join().then(connection => {dispatcher = connection;}).catch(console.error);
   }
 }
 
 function parseURL(videoURL){
 
-  console.log(videoURL);
+  const urlParse = /https?:\/\/(?:www.)?(?:youtube.com\/.*v=([^\s&]{11})|youtu.be\/([^\s?]{11}))/g
 
-  let pos = videoURL.indexOf("=") + 1;
-  if(pos == 0){
-    pos = videoURL.lastIndexOf("/") + 1
+  let split = urlParse.exec(videoURL);
+  if(split == null){return null; }
+
+  for(let i = 0; i < split.length; i++){
+    if(split[i] == undefined){}
+    else if(split[i].length == 11){
+      console.log(split[i]);
+      return split[i];
+    }
   }
-
-  let id = videoURL.slice(pos, pos+11);
-
-  return id;
 }
 
-function addToQueue(videoURL){
-
-  var videoID = parseURL(videoURL);
-
-  // videoID = "iu7wJwbLkpo";
+function addToQueue(videoID, msg){
   console.log(`Adding ${videoID} to the queue...`);
   ytdl.getInfo("https://www.youtube.com/watch?v=" + videoID, (error, info) => {
-		  if(error) {
-			     console.log("Error (" + videoID + "): " + error);
-		  }
-      else {
-			     queue.push({title: info["title"], id: videoID});
-			     if(!stopped && !isBotPlaying() && queue.length === 1) {
-				         playNextSong();
-			     }
-           console.log("Done!");
-		       }
+  	if(error) {
+    	console.log("Error (" + videoID + "): " + error);
+      msg.channel.send("Oops, Something Went Wrong");
+  	}
+    else {
+      queue.push({title: info["title"], id: videoID});
+    	if(!stopped && !isBotPlaying() && queue.length === 1) {
+    		playNextSong();
+    	}
+      console.log("Done!");
+      msg.channel.send("*Song added to queue*");
+  	}
   });
 }
 
@@ -95,9 +95,13 @@ var commands = {
   },
 
   dmResponse: function(msg){
-    // TODO: Create some kind of message filter so only youtube urls get through.
-      addToQueue(msg.content);
-      msg.channel.send("*Song added to queue.*");
+    let id = parseURL(msg.content);
+    if(id == null){
+      msg.channel.send("*Shakes head*\nThat isn't a valid YouTube URL");
+    }
+    else{
+      addToQueue(id, msg);
+    }
   },
 
   playMusic: function(msg, args){
