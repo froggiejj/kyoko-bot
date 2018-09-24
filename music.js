@@ -3,9 +3,6 @@ const fs = require("fs");
 const ytdl = require("ytdl-core");
 const auth = require("./auth.json");
 
-// https://www.youtube.com/watch?v=WrsfJHLx5YA CREAM
-
-var CREAM = 'WrsfJHLx5YA';
 var server;
 var client;
 var voiceConnection = null;
@@ -25,7 +22,7 @@ function playNextSong(){
   var videoID = queue[0]["id"];
   var title = queue[0]["title"];
 
-  client.user.setActivity(title);
+  client.user.setActivity(title, { type: 'LISTENING' });
 
   var ytStream = ytdl("https://www.youtube.com/watch?v=" + videoID);
   voiceConnection = dispatcher.playStream(ytStream);
@@ -98,10 +95,9 @@ var commands = {
   },
 
   dmResponse: function(msg){
-    // if(msg.content.length == 11){
+    // TODO: Create some kind of message filter so only youtube urls get through.
       addToQueue(msg.content);
       msg.channel.send("*Song added to queue.*");
-    // }
   },
 
   playMusic: function(msg, args){
