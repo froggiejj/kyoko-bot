@@ -52,14 +52,7 @@ function parseURL(videoURL){
 
   let split = urlParse.exec(videoURL);
   if(split == null){return null; }
-
-  for(let i = 0; i < split.length; i++){
-    if(split[i] == undefined){}
-    else if(split[i].length == 11){
-      console.log(split[i]);
-      return split[i];
-    }
-  }
+  return split[1] || split[2];
 }
 
 function addToQueue(videoID, msg){
