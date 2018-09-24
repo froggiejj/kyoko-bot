@@ -1,0 +1,17 @@
+{
+  "name": "ava-bot",
+  "version": "1.2.2",
+  "description": "A bot to hang out with the Saxy Beasts",
+  "main": "bot.js",
+  "author": "Froggiejj",
+  "dependencies": {
+    "discord.js": "^11.4.2",
+    "ffmpeg-binaries": "^4.0.0",
+    "fluent-ffmpeg": "^2.1.2",
+    "fs": "0.0.1-security",
+    "opusscript": "latest",
+    "prism": "^4.1.2",
+    "request": "^2.88.0",
+    "ytdl-core": "^0.20.4"
+  }
+}
