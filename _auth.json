@@ -1,0 +1,6 @@
+// rename this auth.json when you have entered your keys. 
+{
+   "token": "YOUR-KEY-HERE",
+   "myID": "YOUR-ID-HERE",
+   "ytKey": "YT-KEY-HERE"
+}
